@@ -21,10 +21,10 @@ public class TaskPresenter {
     private UpdateTaskUseCase updateTaskUseCase;
     
     public TaskPresenter(
-            DeleteTaskUseCase deleteTaskUseCase,
-            GetTasksUseCase getTasksUseCase,
-            SaveTaskUseCase saveTaskUseCase,
-            UpdateTaskUseCase updateTaskUseCase
+        DeleteTaskUseCase deleteTaskUseCase,
+        GetTasksUseCase getTasksUseCase,
+        SaveTaskUseCase saveTaskUseCase,
+        UpdateTaskUseCase updateTaskUseCase
     ) {
         this.deleteTaskUseCase = deleteTaskUseCase;
         this.getTasksUseCase = getTasksUseCase;

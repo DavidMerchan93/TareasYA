@@ -4,8 +4,15 @@
  */
 package com.davidmerchan.tareasya.presentation;
 
+import com.davidmerchan.tareasya.data.TaskDataSource;
+import com.davidmerchan.tareasya.data.TaskRepositoryImpl;
+import com.davidmerchan.tareasya.domain.DeleteTaskUseCase;
+import com.davidmerchan.tareasya.domain.GetTasksUseCase;
+import com.davidmerchan.tareasya.domain.SaveTaskUseCase;
+import com.davidmerchan.tareasya.domain.UpdateTaskUseCase;
 import com.davidmerchan.tareasya.domain.model.Task;
 import com.davidmerchan.tareasya.domain.model.TaskStatus;
+import com.davidmerchan.tareasya.domain.repository.TaskRepository;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +20,12 @@ import java.util.Date;
 import java.util.stream.IntStream;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
         
 public class Home extends javax.swing.JFrame {
+    
+    private TaskPresenter taskPresenter;
 
     private Integer counterId = 0;
     
@@ -34,7 +44,13 @@ public class Home extends javax.swing.JFrame {
     public Home() {
         initComponents();
         setTitle("Mis tareas");
-        
+    }
+    
+    public void setPresenter(TaskPresenter taskPresenter) {
+        this.taskPresenter = taskPresenter;
+    }
+    
+    public void prepareView() {
         prepareTableModels();
         prepareDateSelectors();
         prepareCategoryAndStatus();
@@ -69,25 +85,7 @@ public class Home extends javax.swing.JFrame {
     }
     
     private void prepareTableSelector() {
-     seleccionModelo.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                // Evitar eventos múltiples al cambiar la selección
-                if (!e.getValueIsAdjusting()) {
-                    int filaSeleccionada = tabla.getSelectedRow();
-                    if (filaSeleccionada != -1) { // Verifica que hay una fila seleccionada
-                        // Obtener datos de la fila seleccionada
-                        int id = (int) tabla.getValueAt(filaSeleccionada, 0);
-                        String nombre = (String) tabla.getValueAt(filaSeleccionada, 1);
-                        int edad = (int) tabla.getValueAt(filaSeleccionada, 2);
-
-                        // Mostrar los datos en un mensaje
-                        JOptionPane.showMessageDialog(this,
-                                "Seleccionaste:\nID: " + id + "\nNombre: " + nombre + "\nEdad: " + edad);
-                    }
-                }
-            }
-        });
+     
     }
     
     /**
@@ -128,7 +126,7 @@ public class Home extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(800, 800));
+        setMinimumSize(new java.awt.Dimension(900, 800));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("Tareas por hacer");

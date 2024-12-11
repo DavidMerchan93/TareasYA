@@ -11,12 +11,12 @@ import java.util.Date;
  * @author davidmerchan
  */
 public class Task {
-    Integer id;
-    String title;
-    String detail;
-    String endDate;
-    TaskStatus status;
-    String category;
+    public Integer id;
+    public String title;
+    public String detail;
+    public String endDate;
+    public TaskStatus status;
+    public String category;
     
     public Task(Integer id, String title, String detail, String endDate, TaskStatus status, String category) {
         this.id = id;

@@ -20,6 +20,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>23</maven.compiler.release>
-        <exec.mainClass>com.davidmerchan.tareasya.Home</exec.mainClass>
+        <exec.mainClass>com.davidmerchan.tareasya.TareasYa</exec.mainClass>
     </properties>
 </project>
