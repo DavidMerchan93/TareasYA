@@ -1,6 +1,9 @@
-com/davidmerchan/tareasya/Home$3.class
+com/davidmerchan/tareasya/domain/SaveTaskUseCase.class
 com/davidmerchan/tareasya/TareasYa.class
-com/davidmerchan/tareasya/Home$1.class
-com/davidmerchan/tareasya/Home.class
-com/davidmerchan/tareasya/Home$2.class
-com/davidmerchan/tareasya/Home$4.class
+com/davidmerchan/tareasya/domain/model/Task.class
+com/davidmerchan/tareasya/domain/GetTasksUseCase.class
+com/davidmerchan/tareasya/domain/model/TaskStatus.class
+com/davidmerchan/tareasya/domain/DeleteTaskUseCase.class
+com/davidmerchan/tareasya/data/TaskRepositoryImpl.class
+com/davidmerchan/tareasya/domain/UpdateTaskUseCase.class
+com/davidmerchan/tareasya/domain/repository/TaskRepository.class
