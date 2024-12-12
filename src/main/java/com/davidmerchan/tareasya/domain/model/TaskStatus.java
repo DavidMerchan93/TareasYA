@@ -11,5 +11,6 @@ package com.davidmerchan.tareasya.domain.model;
 public enum TaskStatus {
     TO_DO,
     IN_PROGRESS,
-    DONE
+    DONE,
+    UNDEFINED
 }

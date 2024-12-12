@@ -5,6 +5,7 @@
 package com.davidmerchan.tareasya.domain.repository;
 
 import com.davidmerchan.tareasya.domain.model.Task;
+import com.davidmerchan.tareasya.domain.model.TaskStatus;
 import java.util.List;
 
 /**
@@ -12,7 +13,9 @@ import java.util.List;
  * @author davidmerchan
  */
 public interface TaskRepository {
-    List<Task> getAllTasks();
+    List<Task> getTasks();
+    List<Task> getTasks(TaskStatus status);
+    Task getTask(Integer id);
     void saveTask(Task task);
     void deleteTask(Integer id);
     void updateTask(Task task);

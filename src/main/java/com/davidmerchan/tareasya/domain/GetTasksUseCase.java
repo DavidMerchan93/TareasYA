@@ -4,7 +4,10 @@
  */
 package com.davidmerchan.tareasya.domain;
 
+import com.davidmerchan.tareasya.domain.model.Task;
+import com.davidmerchan.tareasya.domain.model.TaskStatus;
 import com.davidmerchan.tareasya.domain.repository.TaskRepository;
+import java.util.List;
 
 /**
  *
@@ -15,5 +18,17 @@ public class GetTasksUseCase {
     
     public GetTasksUseCase(TaskRepository repository) {
         this.repository = repository;
+    }
+    
+    public Task getTaskById(Integer id) {
+        return repository.getTask(id);
+    }
+    
+    public List<Task> getAllTasks() {
+        return repository.getTasks();
+    }
+    
+    public List<Task> getAllTasks(TaskStatus status) {
+        return repository.getTasks(status);
     }
 }

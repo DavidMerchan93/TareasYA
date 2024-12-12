@@ -25,29 +25,22 @@ import javax.swing.table.DefaultTableModel;
         
 public class Home extends javax.swing.JFrame {
     
-    private TaskPresenter taskPresenter;
+    private TaskPresenter taskPresenter = new TaskPresenter();
 
-    private Integer counterId = 0;
-    
     DefaultTableModel todoTableModel = new DefaultTableModel(new String[]{"ID", "Titulo", "Fecha", "Categoria"}, 0);
     DefaultTableModel inProgressTableModel = new DefaultTableModel(new String[]{"ID", "Titulo", "Fecha", "Categoria"}, 0);
     DefaultTableModel doneTableModel = new DefaultTableModel(new String[]{"ID", "Titulo", "Fecha", "Categoria"}, 0);
-
-    
-    private List<Task> todoTasks = new ArrayList<>();
-    private List<Task> inProgressTasks = new ArrayList<>();
-    private List<Task> completedTasks = new ArrayList<>();
     
     /**
      * Creates new form Home
      */
     public Home() {
-        initComponents();
         setTitle("Mis tareas");
     }
     
     public void setPresenter(TaskPresenter taskPresenter) {
         this.taskPresenter = taskPresenter;
+        initComponents();
     }
     
     public void prepareView() {
@@ -312,17 +305,35 @@ public class Home extends javax.swing.JFrame {
 
     
     private void addNewTask() {
+        
+        String title = txtTitle.getText();
+        String detail = txtDetail.getText();
+        
         String endDate = getEndDate();
         String category = (String) cbCategory.getSelectedItem();
         
-        Task task = new Task(counterId, txtTitle.getText(), txtDetail.getText() ,endDate, TaskStatus.TO_DO, category);
-        todoTasks.add(task);
+        if(title.isEmpty()) {
+            JOptionPane.showMessageDialog(this,"Debe ingresar un título");
+            return;
+        }
         
-        todoTableModel.addRow(new Object[]{task.id, task.title, task.endDate, task.category});
+        if(detail.isEmpty()) {
+            JOptionPane.showMessageDialog(this,"Debe ingresar una descripción");
+            return;
+        }
         
-        counterId ++;
+        taskPresenter.saveTask(title, detail, endDate, TaskStatus.TO_DO, category);
+        updateToDoTaskLists();
         
         clearAllFields();
+    }
+    
+    private void updateToDoTaskLists() {
+        todoTableModel.setRowCount(0);
+        
+        for(Task task: taskPresenter.todoTasks) {
+            todoTableModel.addRow(new Object[]{task.id, task.title, task.endDate, task.category});
+        }
     }
     
     private String getEndDate() {

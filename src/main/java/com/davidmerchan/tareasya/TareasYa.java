@@ -43,10 +43,14 @@ public class TareasYa {
        
     }
     
-    public static void main(String[] args) {
+    private void prepareHomeView() {
         Home homeView = new Home();
         homeView.setPresenter(taskPresenter);
         homeView.prepareView();
         homeView.setVisible(true);
+    }
+    
+    public void main(String[] args) {
+        prepareHomeView();
     }
 }

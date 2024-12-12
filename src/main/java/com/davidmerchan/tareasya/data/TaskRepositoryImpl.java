@@ -5,7 +5,10 @@
 package com.davidmerchan.tareasya.data;
 
 import com.davidmerchan.tareasya.domain.model.Task;
+import com.davidmerchan.tareasya.domain.model.TaskStatus;
 import com.davidmerchan.tareasya.domain.repository.TaskRepository;
+import static java.io.IO.println;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,23 +24,62 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public List<Task> getAllTasks() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
     public void saveTask(Task task) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            taskDataSource.saveTask(task);
+        } catch(Exception e) {
+            println("Error");
+        }
     }
 
     @Override
     public void deleteTask(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            taskDataSource.deleteTask(id);
+        } catch(Exception e) {
+            println("Error");
+        }
     }
 
     @Override
     public void updateTask(Task task) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            taskDataSource.updateTask(task);
+        } catch(Exception e) {
+            println("Error");
+        }
     }
-    
+
+    @Override
+    public List<Task> getTasks() {
+        List<Task> data = new ArrayList<Task>();
+        try {
+            data = taskDataSource.getAllTasks();
+        } catch(Exception e) {
+            println("Error");
+        }
+        return data;
+    }
+
+    @Override
+    public List<Task> getTasks(TaskStatus status) {
+        List<Task> data = new ArrayList<Task>();
+        try {
+            data = taskDataSource.getTasksByStatus(status);
+        } catch(Exception e) {
+            println("Error");
+        }
+        return data;
+    }
+
+    @Override
+    public Task getTask(Integer id) {
+        Task data = new Task();
+        try {
+            data = taskDataSource.getTaskById(id);
+        } catch(Exception e) {
+            println("Error");
+        }
+        return data;
+    }
 }

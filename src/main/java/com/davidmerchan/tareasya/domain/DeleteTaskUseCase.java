@@ -18,4 +18,8 @@ public class DeleteTaskUseCase {
         this.repository = repository;
     }
     
+    public void deleteTask(Integer id) {
+        repository.deleteTask(id);
+    }
+    
 }

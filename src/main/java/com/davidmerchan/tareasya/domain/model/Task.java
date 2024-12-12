@@ -18,8 +18,16 @@ public class Task {
     public TaskStatus status;
     public String category;
     
-    public Task(Integer id, String title, String detail, String endDate, TaskStatus status, String category) {
-        this.id = id;
+    public Task() {
+        this.id = 0;
+        this.title = "N/A";
+        this.detail = "N/A";
+        this.endDate = "N/A";
+        this.status = TaskStatus.UNDEFINED;
+        this.category = "N/A";
+    }
+    
+    public Task(String title, String detail, String endDate, TaskStatus status, String category) {
         this.title = title;
         this.detail = detail;
         this.endDate = endDate;
