@@ -26,13 +26,20 @@ public class TaskDataSource {
     }
     
     public void deleteTask(Integer id) {
-        Integer index = 0;
-        for(int i = 0; i < tasks.size(); i++) {
-            if(Objects.equals(tasks.get(i).id, id)) {
-                index = i;
+        List<Task> newTasks = new ArrayList<Task>();
+        
+        for(Task task: tasks) {
+            if(!Objects.equals(task.id, id)) {
+                newTasks.add(task);
             }
         }
-        this.tasks.remove(index);
+        
+        tasks.clear();
+        for(Task task: newTasks) {
+            if(!Objects.equals(task.id, id)) {
+                tasks.add(task);
+            }
+        }
     }
     
     public void updateTask(Task task) {

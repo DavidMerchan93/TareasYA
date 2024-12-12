@@ -7,10 +7,12 @@ com/davidmerchan/tareasya/domain/model/TaskStatus.class
 com/davidmerchan/tareasya/data/TaskRepositoryImpl.class
 com/davidmerchan/tareasya/presentation/Home$4.class
 com/davidmerchan/tareasya/domain/repository/TaskRepository.class
+com/davidmerchan/tareasya/presentation/Home$5.class
 com/davidmerchan/tareasya/presentation/TaskPresenter.class
 com/davidmerchan/tareasya/TareasYa.class
 com/davidmerchan/tareasya/domain/model/Task.class
 com/davidmerchan/tareasya/data/TaskDataSource.class
 com/davidmerchan/tareasya/domain/GetTasksUseCase.class
 com/davidmerchan/tareasya/domain/DeleteTaskUseCase.class
+com/davidmerchan/tareasya/presentation/Home$6.class
 com/davidmerchan/tareasya/domain/UpdateTaskUseCase.class

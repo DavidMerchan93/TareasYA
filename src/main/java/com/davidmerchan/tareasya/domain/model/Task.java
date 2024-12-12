@@ -34,6 +34,15 @@ public class Task {
         this.status = status;
         this.category = category;
     }
+    
+    public Task(Integer id, String title, String detail, String endDate, TaskStatus status, String category) {
+        this.id = id;
+        this.title = title;
+        this.detail = detail;
+        this.endDate = endDate;
+        this.status = status;
+        this.category = category;
+    }
 
 }
 

@@ -28,6 +28,8 @@ public class TaskPresenter {
     List<Task> inProgressTasks = new ArrayList<>();
     List<Task> completedTasks = new ArrayList<>();
     
+    public Task taskSelected;
+    
     public TaskPresenter() {}
     
     public TaskPresenter(
@@ -42,6 +44,10 @@ public class TaskPresenter {
         this.updateTaskUseCase = updateTaskUseCase;
         
         getAllTasks();
+    }
+    
+    public void selectTask(Task task) {
+        this.taskSelected = task;
     }
     
     public void getAllTasks() {
@@ -85,8 +91,8 @@ public class TaskPresenter {
         getToDoTasks();
     }
     
-    public void deleteTask(Integer id) {
-        deleteTaskUseCase.deleteTask(id);
+    public void deleteTask() {
+        deleteTaskUseCase.deleteTask(taskSelected.id);
         getAllTasks();
     }
     
@@ -97,7 +103,7 @@ public class TaskPresenter {
         TaskStatus status,
         String category
     ) {
-        updateTaskUseCase.updateTask(title, detail, endDate, status, category);
+        updateTaskUseCase.updateTask(taskSelected.id, title, detail, endDate, status, category);
         getAllTasks();
     }
 }

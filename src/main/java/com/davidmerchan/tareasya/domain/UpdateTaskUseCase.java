@@ -20,13 +20,14 @@ public class UpdateTaskUseCase {
     }
     
     public void updateTask(
+        Integer id,
         String title,
         String detail,
         String endDate,
         TaskStatus status,
         String category
     ) {
-        Task task = new Task(title, detail, endDate, status, category);
+        Task task = new Task(id, title, detail, endDate, status, category);
         repository.updateTask(task);
     }
 }

@@ -12,6 +12,9 @@ import com.davidmerchan.tareasya.domain.SaveTaskUseCase;
 import com.davidmerchan.tareasya.domain.UpdateTaskUseCase;
 import com.davidmerchan.tareasya.domain.model.Task;
 import com.davidmerchan.tareasya.domain.model.TaskStatus;
+import static com.davidmerchan.tareasya.domain.model.TaskStatus.DONE;
+import static com.davidmerchan.tareasya.domain.model.TaskStatus.IN_PROGRESS;
+import static com.davidmerchan.tareasya.domain.model.TaskStatus.TO_DO;
 import com.davidmerchan.tareasya.domain.repository.TaskRepository;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -19,7 +22,9 @@ import java.util.List;
 import java.util.Date;
 import java.util.stream.IntStream;
 import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
         
@@ -47,6 +52,7 @@ public class Home extends javax.swing.JFrame {
         prepareTableModels();
         prepareDateSelectors();
         prepareCategoryAndStatus();
+        prepareTableSelector();
     }
     
     private void prepareTableModels() {
@@ -57,12 +63,8 @@ public class Home extends javax.swing.JFrame {
 
     private void prepareDateSelectors() {
         IntStream.rangeClosed(1, 31).forEach(cbDay::addItem);
+        IntStream.rangeClosed(1, 12).forEach(cbMonth::addItem);
         IntStream.rangeClosed(2024, 2026).forEach(cbYear::addItem);
-        
-        String[] months = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
-        for (String month : months) {
-            cbMonth.addItem(month);
-        }
     }
     
     private void prepareCategoryAndStatus() {
@@ -78,7 +80,27 @@ public class Home extends javax.swing.JFrame {
     }
     
     private void prepareTableSelector() {
-     
+        tbTodoList.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            Integer index = tbTodoList.getSelectedRow();
+            if(index >= 0) {
+                Task task = taskPresenter.todoTasks.get(index);
+                selectTask(task);
+            }
+        });
+        tbInProgressList.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            Integer index = tbInProgressList.getSelectedRow();
+            if(index >= 0) {
+                Task task = taskPresenter.inProgressTasks.get(index);
+                selectTask(task);
+            }
+        });
+        tbDoneList.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            Integer index = tbDoneList.getSelectedRow();
+            if(index >= 0) {
+                Task task = taskPresenter.completedTasks.get(index);
+                selectTask(task);
+            }
+        });
     }
     
     /**
@@ -110,6 +132,7 @@ public class Home extends javax.swing.JFrame {
         btnAddTask = new javax.swing.JButton();
         btnUpdateTask = new javax.swing.JButton();
         btnDeleteTask = new javax.swing.JButton();
+        btnClearFields = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         tbTodoList = new javax.swing.JTable();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -137,7 +160,7 @@ public class Home extends javax.swing.JFrame {
 
         jLabel5.setText("Detalle");
 
-        jLabel6.setText("Fecha de terminación");
+        jLabel6.setText("Fecha de terminación (DD/MM/AAAA)");
 
         jLabel7.setText("Categoria");
 
@@ -153,6 +176,7 @@ public class Home extends javax.swing.JFrame {
         });
 
         btnUpdateTask.setText("Actualizar Tarea");
+        btnUpdateTask.setEnabled(false);
         btnUpdateTask.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateTaskActionPerformed(evt);
@@ -160,9 +184,17 @@ public class Home extends javax.swing.JFrame {
         });
 
         btnDeleteTask.setText("Eliminar Tarea");
+        btnDeleteTask.setEnabled(false);
         btnDeleteTask.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteTaskActionPerformed(evt);
+            }
+        });
+
+        btnClearFields.setText("Limpiar");
+        btnClearFields.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearFieldsActionPerformed(evt);
             }
         });
 
@@ -173,12 +205,13 @@ public class Home extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbCategory, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtTitle)
                     .addComponent(txtDetail)
-                    .addComponent(cbStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnAddTask, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnUpdateTask, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDeleteTask, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbCategory, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -193,7 +226,7 @@ public class Home extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(jLabel8))
                         .addGap(0, 8, Short.MAX_VALUE))
-                    .addComponent(btnDeleteTask, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnClearFields, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -209,7 +242,7 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(txtDetail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -218,7 +251,7 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -228,10 +261,12 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(btnUpdateTask, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnDeleteTask, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnClearFields, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(545, 89, -1, -1));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(545, 89, -1, 550));
 
         tbTodoList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -292,23 +327,26 @@ public class Home extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDeleteTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteTaskActionPerformed
-        // TODO add your handling code here:
+        deleteSelectedTask();
     }//GEN-LAST:event_btnDeleteTaskActionPerformed
 
     private void btnUpdateTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateTaskActionPerformed
-        // TODO add your handling code here:
+        updateSelectedTask();
     }//GEN-LAST:event_btnUpdateTaskActionPerformed
 
     private void btnAddTaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddTaskActionPerformed
         addNewTask();
     }//GEN-LAST:event_btnAddTaskActionPerformed
 
+    private void btnClearFieldsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearFieldsActionPerformed
+        clearAllFields();
+    }//GEN-LAST:event_btnClearFieldsActionPerformed
+
     
     private void addNewTask() {
         
         String title = txtTitle.getText();
         String detail = txtDetail.getText();
-        
         String endDate = getEndDate();
         String category = (String) cbCategory.getSelectedItem();
         
@@ -328,6 +366,44 @@ public class Home extends javax.swing.JFrame {
         clearAllFields();
     }
     
+    private void deleteSelectedTask() {
+        taskPresenter.deleteTask();
+        updateAllTasks();
+        clearAllFields();
+    }
+    
+    private void updateSelectedTask() {
+        String title = txtTitle.getText();
+        String detail = txtDetail.getText();
+        String endDate = getEndDate();
+        String category = (String) cbCategory.getSelectedItem();
+        
+        String status = (String) cbStatus.getSelectedItem();
+        TaskStatus newStatus = TaskStatus.UNDEFINED;
+        
+        switch(status) {
+            case "Por hacer":
+                newStatus = TaskStatus.TO_DO;
+                break;
+            case "En progreso":
+                newStatus = TaskStatus.IN_PROGRESS;
+                break;
+            case "Completada":
+                newStatus = TaskStatus.DONE;
+                break;
+        }
+        
+        taskPresenter.updateTask(title, detail, endDate, newStatus, category);
+        updateAllTasks();
+        clearAllFields();
+    }
+    
+    private void updateAllTasks() {
+        updateToDoTaskLists();
+        updateInProgressTaskLists();
+        updateDoneTaskLists();
+    }
+    
     private void updateToDoTaskLists() {
         todoTableModel.setRowCount(0);
         
@@ -336,11 +412,27 @@ public class Home extends javax.swing.JFrame {
         }
     }
     
+    private void updateInProgressTaskLists() {
+        inProgressTableModel.setRowCount(0);
+        
+        for(Task task: taskPresenter.inProgressTasks) {
+            inProgressTableModel.addRow(new Object[]{task.id, task.title, task.endDate, task.category});
+        }
+    }
+    
+    private void updateDoneTaskLists() {
+        doneTableModel.setRowCount(0);
+        
+        for(Task task: taskPresenter.completedTasks) {
+            doneTableModel.addRow(new Object[]{task.id, task.title, task.endDate, task.category});
+        }
+    }
+    
     private String getEndDate() {
         Integer day = (Integer) cbDay.getSelectedItem();
-        String month = (String) cbMonth.getSelectedItem();
+        Integer month = (Integer) cbMonth.getSelectedItem();
         Integer year = (Integer) cbYear.getSelectedItem();
-        String endDate = day + " de " + month + " del " + year;
+        String endDate = day + "/" + month + "/" + year;
         
         return endDate;
     }
@@ -353,6 +445,55 @@ public class Home extends javax.swing.JFrame {
         cbYear.setSelectedIndex(0);
         cbCategory.setSelectedIndex(0);
         cbStatus.setSelectedIndex(0);
+        
+        tbTodoList.clearSelection();
+        tbInProgressList.clearSelection();
+        tbDoneList.clearSelection();
+        
+        btnAddTask.setEnabled(true);
+        btnDeleteTask.setEnabled(false);
+        btnUpdateTask.setEnabled(false);
+        cbStatus.setEnabled(false);
+        
+    }
+    
+    private void selectTask(Task task) {
+        clearAllFields();
+        taskPresenter.selectTask(task);
+        
+        txtTitle.setText(task.title);
+        txtDetail.setText(task.detail);
+        
+        String[] dateSplit = task.endDate.split("/");
+        
+        Integer day = Integer.parseInt(dateSplit[0]);
+        Integer month = Integer.parseInt(dateSplit[1]);
+        Integer year = Integer.parseInt(dateSplit[2]);
+        
+        cbDay.setSelectedItem(day);
+        cbMonth.setSelectedItem(month);
+        cbYear.setSelectedItem(year);
+        
+        String status = "";
+        switch(task.status) {
+            case TO_DO:
+                status = "Por hacer";
+                break;
+            case IN_PROGRESS:
+                status = "En progreso";
+                break;
+            case DONE:
+                status = "Completada";
+                break;
+        }
+        
+        cbStatus.setSelectedItem(status);
+        cbCategory.setSelectedItem(task.category);
+        
+        btnAddTask.setEnabled(false);
+        btnDeleteTask.setEnabled(true);
+        btnUpdateTask.setEnabled(true);
+        cbStatus.setEnabled(true);
     }
     
     /**
@@ -392,11 +533,12 @@ public class Home extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddTask;
+    private javax.swing.JButton btnClearFields;
     private javax.swing.JButton btnDeleteTask;
     private javax.swing.JButton btnUpdateTask;
     private javax.swing.JComboBox<String> cbCategory;
     private javax.swing.JComboBox<Integer> cbDay;
-    private javax.swing.JComboBox<String> cbMonth;
+    private javax.swing.JComboBox<Integer> cbMonth;
     private javax.swing.JComboBox<String> cbStatus;
     private javax.swing.JComboBox<Integer> cbYear;
     private org.jdatepicker.util.JDatePickerUtil jDatePickerUtil1;
